@@ -1,5 +1,5 @@
 from transformers import (
-    BloomPreTrainedModel, BloomModel, BloomTokenizerFast, 
+    #BloomPreTrainedModel, BloomModel, BloomTokenizerFast, 
     GPT2LMHeadModel, GPT2Tokenizer,
     AutoTokenizer
     )
@@ -37,10 +37,10 @@ def infer(inp):
     return output
 
 paths = [
-    ["C:/Users/marci/Desktop/ficalindie/ChatCuddhi/data/words_files/gr",
-    "C:/Users/marci/Desktop/ficalindie/ChatCuddhi/data/words_files/it"],
-    ["C:/Users/marci/Desktop/ficalindie/ChatCuddhi/data/corrected/tgt_griko",
-    "C:/Users/marci/Desktop/ficalindie/ChatCuddhi/data/corrected/src2_italian"]
+    [".../words_files/gr",
+    ".../words_files/it"],
+    [".../target_griko",
+    "/source_italian"]
 ] 
 
 prompt_formula = [
@@ -63,15 +63,18 @@ datagenerator.save_data()
 
 device = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 
+'''
+Try in the future Bloom
+model = BloomModel.from_pretrained("bigscience/bloom-560m")
 tokenizer = AutoTokenizer.from_pretrained("bigscience/bloom-560m")
-#tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+'''
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 tokenizer.add_special_tokens({"pad_token": "<pad>", 
                                 "bos_token": "<startofstring>",
                                 "eos_token": "<endofstring>"})
 tokenizer.add_tokens(["<bot>:"])
 
-model = BloomModel.from_pretrained("bigscience/bloom-560m")
-#model = GPT2LMHeadModel.from_pretrained("gpt2")
+model = GPT2LMHeadModel.from_pretrained("gpt2")
 model.resize_token_embeddings(len(tokenizer))
 
 model = model.to(device)
